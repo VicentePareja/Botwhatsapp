@@ -45,4 +45,4 @@ Vicente Pareja
 
 ## Licencia
 
-Este proyecto fué creado por mi pero es open source. Sientete libre de colaborar.
+Este proyecto fué creado por mi pero es open source. Siéntete libre de colaborar.
