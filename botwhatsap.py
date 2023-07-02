@@ -1,61 +1,48 @@
-import pyautogui
-import pandas as pd
 import time
+import pandas as pd
+import pyautogui
 
-# Lee la base de datos de Excel
-excel_file = "whatsapp_numbers.xlsx"
-df = pd.read_excel(excel_file)
+# Constants
+EXCEL_FILE = "whatsapp_numbers.xlsx"
+PHONE_COLUMN = 'Numero de telefono'
 
-# Guarda los numeros en un data frame
-phone_numbers = df['Numero de telefono'].tolist()
+MESSAGE = """*Hola! Me llamo Vicente y este menaje fué enviado por un bot!*"""
 
-# Se define el mensaje
+# Read the phone numbers from the Excel file
+def read_phone_numbers(filename, column):
+    df = pd.read_excel(filename)
+    return df[column].tolist()
 
-message1 = """*Hola! Me llamo Vicente y te quiero recordar votar en estas elecciones!*"""
-message2 = """Te toma *menos de un minuto* y lo puedes hacer mediante un correo que ya recibiste por parte de equipo@votaciones.cl"""
-message3 = """Si quieres saber acerca de mi candidatura, te dejo el siguiente post:"""
-message4 = """https://www.instagram.com/p/CrL0tH4A-RB/?igshid=YmMyMTA2M2Y="""
-
-
-# Función para buscar y enviar mensajes a través de WhatsApp Web
-
-time.sleep(3)
-
-
-def send_message(phone_number, message1, message2, message3, message4):
-    # Abre una nueva pestaña en el navegador
+# Send a message through WhatsApp Web
+def send_message(phone_number, message):
+    # Open a new browser tab
     pyautogui.hotkey('ctrl', 't')
 
-    # Abre WhatsApp Web con el número de teléfono especificado
+    # Open WhatsApp Web with the specified phone number
     pyautogui.typewrite(f'https://web.whatsapp.com/send?phone={phone_number}')
     pyautogui.press('enter')
 
-    # Espera a que la página cargue
+    # Wait for the page to load
     time.sleep(10)
 
-    # Escribe y envía el mensaje
-    pyautogui.typewrite(message1)
-    pyautogui.hotkey('shift', 'enter')
-    pyautogui.hotkey('shift', 'enter')
-    pyautogui.typewrite(message2)
-    pyautogui.hotkey('shift', 'enter')
-    pyautogui.hotkey('shift', 'enter')
-    pyautogui.typewrite(message3)
-    pyautogui.hotkey('shift', 'enter')
-    pyautogui.hotkey('shift', 'enter')
-    pyautogui.typewrite(message4)
+    # Type and send the message
+    for line in message.split('\n'):
+        pyautogui.typewrite(line)
+        pyautogui.press('enter')
 
-    pyautogui.press('enter')
-
-    # Cierra la pestaña
+    # Close the tab
     time.sleep(2)
     pyautogui.hotkey('ctrl', 'w')
 
+def main():
+    # Initialize
+    time.sleep(3)
+    phone_numbers = read_phone_numbers(EXCEL_FILE, PHONE_COLUMN)
 
-# Envía el mensaje a cada número en la lista
-contador = 0
-for phone_number in phone_numbers:
+    # Send the message to each number in the list
+    for i, phone_number in enumerate(phone_numbers, 1):
+        send_message(int(phone_number), MESSAGE)
+        print(f"Mensajes enviados: {i}")
 
-    contador += 1
-    send_message(int(phone_number), message1, message2, message3, message4)
-    print(f"Mensajes enviados: {contador}")
+if __name__ == "__main__":
+    main()
