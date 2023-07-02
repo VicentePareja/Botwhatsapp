@@ -14,7 +14,7 @@ Puedes instalar estas bibliotecas con el siguiente comando:
 
 ´´´shell
 pip install pandas pyautogui
-´´´´
+´´´
 
 
 Además, necesitas tener acceso a un archivo Excel (`.xlsx`) que contenga los números de teléfono a los que deseas enviar los mensajes.
